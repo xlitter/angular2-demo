@@ -16,31 +16,65 @@ interface Hero {
       <li *ngFor="#hero of heroes"
       (click)="onSelect(hero)" 
       [class.selected]="hero === selectHero">
-        <span>{{hero.id}}</span>{{hero.name}}
+        <span class="badge">{{hero.id}}</span>{{hero.name}}
       </li>
     </ul>
-    <h2>{{selectHero.name}} details!</h2>
-    <div><label>id:</label>{{selectHero.id}}</div>
-    <div>
-      <label>name:</label>
-      <div><input [(ngModel)]="selectHero.name" placeholder="name"/></div>
+    <div *ngIf="selectHero">
+      <h2>{{selectHero.name}} details!</h2>
+      <div><label>id:</label>{{selectHero.id}}</div>
+      <div>
+        <label>name:</label>
+        <div><input [(ngModel)]="selectHero.name" placeholder="name"/></div>
+      </div>
     </div>
    `,
   styles: [`     
-    .heroes {list-style-type: none; margin-left: 1em; padding: 0; width: 10em;}
-    .heroes li { cursor: pointer; position: relative; left: 0; transition: all 0.2s ease; }
-    .heroes li:hover {color: #369; background-color: #EEE; left: .2em;}
+    .selected {
+      background-color: #CFD8DC !important;
+      color: white;
+    }
+    .heroes {
+      margin: 0 0 2em 0;
+      list-style-type: none;
+      padding: 0;
+      width: 10em;
+    }
+    .heroes li {
+      cursor: pointer;
+      position: relative;
+      left: 0;
+      background-color: #EEE;
+      margin: .5em;
+      padding: .3em 0em;
+      height: 1.6em;
+      border-radius: 4px;
+    }
+    .heroes li.selected:hover {
+      color: white;
+    }
+    .heroes li:hover {
+      color: #607D8B;
+      background-color: #EEE;
+      left: .1em;
+    }
+    .heroes .text {
+      position: relative;
+      top: -3px;
+    }
     .heroes .badge {
+      display: inline-block;
       font-size: small;
       color: white;
-      padding: 0.1em 0.7em;
-      background-color: #369;
+      padding: 0.8em 0.7em 0em 0.7em;
+      background-color: #607D8B;
       line-height: 1em;
       position: relative;
       left: -1px;
-      top: -1px;
+      top: -4px;
+      height: 1.8em;
+      margin-right: .8em;
+      border-radius: 4px 0px 0px 4px;
     }
-    .selected { background-color: #EEE; color: #369; }
   `]
 })
 export class AppComponent {
