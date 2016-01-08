@@ -1,10 +1,14 @@
 'use strict';
 
+import {Component, OnInit} from 'angular2/core';
 import {Hero} from './hero';
-import {Component} from 'angular2/core';
+import {HeroService} from './hero.service';
 
 @Component({
   selector: 'hero-detail',
+  //自组件可以使用父组件注入的service,
+  //如果子组件通过providers提供了同样的Service, 则会生成一个新的service实例,一般子组件不用提供父组件已有的service
+  //providers: [HeroService],
   template: `
     <div *ngIf="hero">
        <h2>{{hero.name}} details!</h2>
@@ -16,13 +20,14 @@ import {Component} from 'angular2/core';
        <div>
           <button (click)="setHeroName('detailName')">set name</button>
           <button (click)="resetHero()">reset</button>
+          <button (click)="parentHeroesIsEqualsHeros()">equal</button>
        </div>
     </div>
   `,
-  inputs: ['hero']
+  inputs: ['hero', 'parentHeroService']
 
 })
-export class HeroDetailComponent {
+export class HeroDetailComponent implements OnInit {
   /**
    * 
    * 如果inputs中有hero, 而class中未定义,则会默认生成一个hero,也可通过this.hero引用到此hero,
@@ -33,6 +38,20 @@ export class HeroDetailComponent {
    * 
    */
   public hero: Hero;
+  
+  public parentHeroService: HeroService;
+  
+  public heroes: Hero[];
+
+  constructor(private _heroService: HeroService) {
+
+  }
+
+  ngOnInit() {
+    this._heroService.getHeroes().then(data=> {
+      this.heroes = data;
+    });
+  }
 
   setHeroName(name) {
     this.hero.name = name;
@@ -43,5 +62,12 @@ export class HeroDetailComponent {
       id: 2,
       name: 'abc-detail'
     };
+  }
+
+  parentHeroesIsEqualsHeros() {
+    //如果子组件提供了providers,则其与父级的service是不一致的
+    const result = this._heroService === this.parentHeroService;
+    console.log('parentService', this.parentHeroService);
+    console.log('parentHeroesIsEqualsHeros', result);
   }
 }
